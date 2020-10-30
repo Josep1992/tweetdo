@@ -1,0 +1,206 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todos</title>
+</head>
+
+<body>
+    <h1>Todos</h1>
+    <input type="text" placeholder="Enter a Todo" />
+    <ul style="display: none" id="todos"></ul>
+    <button id="add">Add</button>
+    <button id="clear">Clear all</button>
+    <script>
+
+        class Todo{
+            url = "http://127.0.0.1:8080/";
+            headers = {
+                "Content-type": "application/json; charset=utf-8"
+            }
+
+            async add(todo = {}){
+                const response = await fetch(this.url.concat("add"),{
+                    method: "POST",
+                    body: JSON.stringify(todo),
+                    headers: this.headers
+                })
+
+                return response.json();
+            }
+
+            async getTodos(){
+                const response = await fetch(this.url.concat("todos"),{
+                    method: "GET",
+                    headers: this.headers
+                })
+
+                return response.json();
+            }
+        }
+
+        const todoActions = new Todo();
+        
+        function storageIsNotEmpty(storage) {
+            return storage && Object.keys(storage).length;
+        }
+
+        function setPersistentState(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        function getPersistentState(key) {
+            return JSON.parse(localStorage.getItem(key));
+        }
+
+        function uuid() {
+            const id = Math.random()
+                .toString(36)
+                .replace(/^[-_.*]$/g, "")
+                .split(".")[1];
+            return id;
+        }
+
+        function checkbox({ checked = false, cb = undefined }) {
+            const input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = checked;
+
+            if (cb) {
+                input.onclick = (e) => cb(e);
+            }
+
+            return input;
+        }
+
+        function createTodo({ todo, UUID, checked }) {
+            const li = document.createElement("li");
+            const id = UUID || uuid().concat(uuid());
+
+            li.innerHTML = todo;
+            li.setAttribute("id", id);
+
+            if (checked) {
+                li.style.textDecoration = "line-through";
+            } else {
+                li.style.textDecoration = "none";
+            }
+
+            li.appendChild(
+                checkbox({
+                    checked,
+                    cb: (e) => {
+                        if (e.target.checked) {
+                            li.style.textDecoration = "line-through";
+                        } else {
+                            li.style.textDecoration = "none";
+                        }
+
+                        const storage = getPersistentState("todos");
+
+                        if (storageIsNotEmpty(storage)) {
+                            setPersistentState("todos", {
+                                ...(storage && Object.keys(storage).length
+                                    ? {
+                                        ...Object.keys(storage).reduce((obj, id) => {
+                                            const todo = storage[id];
+                                            obj[id] = { ...todo };
+
+                                            if (id === li.id) {
+                                                obj[id].checked = e.target.checked;
+                                            }
+
+                                            return obj;
+                                        }, {}),
+                                    }
+                                    : {}),
+                            });
+                        }
+                    },
+                })
+            );
+
+            return li;
+        }
+
+        function appendTodoToList(todo) {
+            const ul = document.getElementById("todos");
+            ul.appendChild(todo);
+
+            if (ul.style.display !== "block") {
+                ul.style.display = "block";
+            }
+
+            return ul;
+        }
+
+        window.addEventListener("DOMContentLoaded", async (event) => {
+            const ul = document.getElementById("todos");
+            const storage = getPersistentState("todos");
+
+            console.log(await todoActions.getTodos()) 
+
+            if (storageIsNotEmpty(storage)) {
+                Object.keys(storage).forEach((id) => {
+                    const todo = createTodo({
+                        todo: storage[id].value,
+                        UUID: id,
+                        checked: storage[id].checked,
+                    });
+
+                    appendTodoToList(todo);
+                });
+            }
+
+            const add = document.getElementById("add");
+            const clear = document.getElementById("clear");
+
+            add.addEventListener("click", async (e) => {
+                const input = document.querySelector("input");
+
+                if (input.value) {
+                    const todo = createTodo({
+                        todo: input.value,
+                        checked: false,
+                    });
+
+                    console.log(await todoActions.add({
+                        todo: input.value,
+                        checked: false,
+                    }));
+
+                    appendTodoToList(todo);
+
+                    const storage = getPersistentState("todos");
+
+                    setPersistentState("todos", {
+                        ...(storageIsNotEmpty(storage)
+                            ? {
+                                ...Object.keys(storage).reduce((obj, id) => {
+                                    const todo = storage[id];
+                                    obj[id] = todo;
+                                    return obj;
+                                }, {}),
+                            }
+                            : {}),
+
+                        [todo.id]: {
+                            value: input.value,
+                            checked: false,
+                        },
+                    });
+
+                    input.value = "";
+                }
+            });
+
+            clear.addEventListener("click", (e) => {
+                document.querySelector("ul").innerHTML = "";
+                localStorage.clear();
+            });
+        });
+    </script>
+</body>
+
+</html>
