@@ -28,15 +28,26 @@ def todos():
 def add_todo():
     payload = request.get_json(request.data)
 
-    if(payload['todo'] == ''):
+    if payload['todo'] == '':
         return jsonify({"error": "Todo's can't be empty"})
 
     payload['id'] = str(uuid4())
     payload['date'] = date.isoformat(date.today())
 
-    create_todo(payload)
+    todo = create_todo(payload)
 
-    return jsonify(payload)
+    return jsonify({"todo": todo})
+
+@app.route('/delete',methods=["DELETE"])
+def delete_todo():
+    payload = request.get_json(request.data)
+
+    if payload['id'] == "":
+        return jsonify({"error": "id is empty"})
+
+    database.delete_todo(payload["id"])
+
+    return jsonify({"message": 'Todo Deleted', "id": payload["id"]})
 
 
 if __name__ == "__main__":

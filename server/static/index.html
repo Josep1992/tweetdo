@@ -30,6 +30,17 @@
                 return response.json();
             }
 
+            async deleteTodo(id){
+                const response = await fetch(this.url.concat("delete"),{
+                    method: "DELETE",
+                    headers: this.headers,
+                    body: JSON.stringify({id}),
+                })
+
+                return response.json();
+            }
+            
+
             async getTodos(){
                 const response = await fetch(this.url.concat("todos"),{
                     method: "GET",
@@ -75,11 +86,46 @@
         }
 
         function createTodo({ todo, UUID, checked }) {
-            const li = document.createElement("li");
             const id = UUID || uuid().concat(uuid());
 
-            li.innerHTML = todo;
+            // @elements
+            const li = document.createElement("li");
+            const span = document.createElement("span");
+
+            span.innerHTML = "🗑️"
+            span.dataset.todo = id
+            span.onclick = deleteTodo;
+            span.setAttribute("style", "margin-right: 10px");
+
+            async function deleteTodo(e){
+                const delete_id = e["target"]["dataset"]["todo"] || undefined
+
+                if(delete_id){
+                    const response = await todoActions.deleteTodo(id)
+
+                    /* 
+                    TODO:
+                        remove li 
+                        re-fetch todos 
+                        add to body
+                    */
+                    
+                    console.log(response);
+                }
+            }
+
+            li.innerHTML = `
+                <div data-todo=${id}>
+                    <span style="margin-right: 10px">
+                        ${todo}
+                    </span>
+                </div>
+            `;
+
+
+            li.insertAdjacentElement("beforeend",span)
             li.setAttribute("id", id);
+            li.setAttribute("style", "display: flex; flex-direction: row; flex-wrap: wrap");
 
             if (checked) {
                 li.style.textDecoration = "line-through";
@@ -96,7 +142,8 @@
                         } else {
                             li.style.textDecoration = "none";
                         }
-
+                        
+                        /*
                         const storage = getPersistentState("todos");
 
                         if (storageIsNotEmpty(storage)) {
@@ -117,6 +164,7 @@
                                     : {}),
                             });
                         }
+                        */
                     },
                 })
             );
@@ -139,18 +187,16 @@
             const ul = document.getElementById("todos");
             const storage = getPersistentState("todos");
 
-            console.log(await todoActions.getTodos()) 
+            const response = await todoActions.getTodos()
 
-            if (storageIsNotEmpty(storage)) {
-                Object.keys(storage).forEach((id) => {
-                    const todo = createTodo({
-                        todo: storage[id].value,
-                        UUID: id,
-                        checked: storage[id].checked,
-                    });
-
-                    appendTodoToList(todo);
-                });
+            if(response.todos.length){
+                response.todos.forEach((t) => (
+                    appendTodoToList(createTodo({
+                        todo: t.todo,
+                        UUID: t.id,
+                        checked: t.checked
+                    }))
+                ))
             }
 
             const add = document.getElementById("add");
@@ -160,18 +206,20 @@
                 const input = document.querySelector("input");
 
                 if (input.value) {
-                    const todo = createTodo({
+                    const response = await todoActions.add({
                         todo: input.value,
                         checked: false,
                     });
 
-                    console.log(await todoActions.add({
-                        todo: input.value,
-                        checked: false,
-                    }));
+                    const todo = createTodo({
+                        UUID: response.todo.id,
+                        todo: response.todo.todo,
+                        checked: response.todo.checked
+                    })
 
                     appendTodoToList(todo);
 
+                    /*
                     const storage = getPersistentState("todos");
 
                     setPersistentState("todos", {
@@ -190,6 +238,7 @@
                             checked: false,
                         },
                     });
+                    */
 
                     input.value = "";
                 }
