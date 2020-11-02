@@ -44,11 +44,9 @@ def delete_todo(id):
 
 
 def todos():
-    response = None
     with open(database,"r") as file:
         try:
             data = json.load(file)
-            response = data
+            return data
         except Exception as e:
             print("CREATING TODOS RESPONSE FROM JSON FILE exception: {}".format(e))
-    return response

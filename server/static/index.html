@@ -85,8 +85,17 @@
             return input;
         }
 
+        function removeElementById(id){
+            const e = document.getElementById(
+                typeof id !== "string"
+                    ? id.toString()
+                    : id
+            );
+            e.remove()
+        }
+
         function createTodo({ todo, UUID, checked }) {
-            const id = UUID || uuid().concat(uuid());
+            const id = UUID || uuid();
 
             // @elements
             const li = document.createElement("li");
@@ -102,15 +111,7 @@
 
                 if(delete_id){
                     const response = await todoActions.deleteTodo(id)
-
-                    /* 
-                    TODO:
-                        remove li 
-                        re-fetch todos 
-                        add to body
-                    */
-                    
-                    console.log(response);
+                    removeElementById(response.id)
                 }
             }
 
@@ -142,29 +143,6 @@
                         } else {
                             li.style.textDecoration = "none";
                         }
-                        
-                        /*
-                        const storage = getPersistentState("todos");
-
-                        if (storageIsNotEmpty(storage)) {
-                            setPersistentState("todos", {
-                                ...(storage && Object.keys(storage).length
-                                    ? {
-                                        ...Object.keys(storage).reduce((obj, id) => {
-                                            const todo = storage[id];
-                                            obj[id] = { ...todo };
-
-                                            if (id === li.id) {
-                                                obj[id].checked = e.target.checked;
-                                            }
-
-                                            return obj;
-                                        }, {}),
-                                    }
-                                    : {}),
-                            });
-                        }
-                        */
                     },
                 })
             );
@@ -204,7 +182,7 @@
 
             add.addEventListener("click", async (e) => {
                 const input = document.querySelector("input");
-
+                
                 if (input.value) {
                     const response = await todoActions.add({
                         todo: input.value,
@@ -218,27 +196,6 @@
                     })
 
                     appendTodoToList(todo);
-
-                    /*
-                    const storage = getPersistentState("todos");
-
-                    setPersistentState("todos", {
-                        ...(storageIsNotEmpty(storage)
-                            ? {
-                                ...Object.keys(storage).reduce((obj, id) => {
-                                    const todo = storage[id];
-                                    obj[id] = todo;
-                                    return obj;
-                                }, {}),
-                            }
-                            : {}),
-
-                        [todo.id]: {
-                            value: input.value,
-                            checked: false,
-                        },
-                    });
-                    */
 
                     input.value = "";
                 }
