@@ -2,3 +2,4 @@
 venv
 db.json
 .vscode
+__pycache__
