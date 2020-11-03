@@ -15,7 +15,7 @@
     <script>
 
         class Todo{
-            url = "http://127.0.0.1:8080/";
+            url = "http://127.0.0.1:8080/api/";
             headers = {
                 "Content-type": "application/json; charset=utf-8"
             }
@@ -23,6 +23,16 @@
             async add(todo = {}){
                 const response = await fetch(this.url.concat("add"),{
                     method: "POST",
+                    body: JSON.stringify(todo),
+                    headers: this.headers
+                })
+
+                return response.json();
+            }
+
+            async update(todo = {}){
+                const response = await fetch(this.url.concat("edit"),{
+                    method: "PUT",
                     body: JSON.stringify(todo),
                     headers: this.headers
                 })
@@ -39,7 +49,7 @@
 
                 return response.json();
             }
-            
+
 
             async getTodos(){
                 const response = await fetch(this.url.concat("todos"),{
@@ -52,7 +62,7 @@
         }
 
         const todoActions = new Todo();
-        
+
         function storageIsNotEmpty(storage) {
             return storage && Object.keys(storage).length;
         }
@@ -111,7 +121,9 @@
 
                 if(delete_id){
                     const response = await todoActions.deleteTodo(id)
-                    removeElementById(response.id)
+                    if(response.success){
+                        removeElementById(response.id)
+                    }
                 }
             }
 
@@ -137,11 +149,19 @@
             li.appendChild(
                 checkbox({
                     checked,
-                    cb: (e) => {
-                        if (e.target.checked) {
-                            li.style.textDecoration = "line-through";
-                        } else {
-                            li.style.textDecoration = "none";
+                    cb: async (e) => {
+
+                        const response = await todoActions.update({
+                            id: li.id,
+                            checked: e.target.checked
+                        });
+
+                        if(response.success){
+                            if (e.target.checked) {
+                                li.style.textDecoration = "line-through";
+                            } else {
+                                li.style.textDecoration = "none";
+                            }
                         }
                     },
                 })
@@ -182,13 +202,13 @@
 
             add.addEventListener("click", async (e) => {
                 const input = document.querySelector("input");
-                
-                if (input.value) {
-                    const response = await todoActions.add({
-                        todo: input.value,
-                        checked: false,
-                    });
 
+                const response = await todoActions.add({
+                    todo: input.value,
+                    checked: false,
+                });
+
+                if(response.success){
                     const todo = createTodo({
                         UUID: response.todo.id,
                         todo: response.todo.todo,
