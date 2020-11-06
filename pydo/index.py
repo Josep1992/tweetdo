@@ -9,7 +9,7 @@ from database import create_todo,update_todo
 
 from constants import CONSTANTS
 
-app = Flask(__name__,static_folder='static')
+app = Flask(__name__,static_folder='client')
 database.initialize()
 
 
