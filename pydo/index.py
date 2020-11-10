@@ -5,7 +5,7 @@ from flask.json import jsonify
 from uuid import uuid4
 from os.path import join
 import database
-from database import create_todo,update_todo
+from database import create_todo,update_todo,clear_todos
 
 from constants import CONSTANTS
 
@@ -29,7 +29,7 @@ def add_todo():
     payload = request.get_json(request.data)
 
     if payload['todo'] == '':
-        return jsonify({"error": "Todo nothing really?!","success": False})
+        return jsonify({"error": "Pydo nothing really?!","success": False})
 
     payload['id'] = str(uuid4())
     payload['date'] = date.isoformat(date.today())
@@ -49,6 +49,13 @@ def edit_todo():
     todo = update_todo(payload)
 
     return jsonify({"todo": todo,"success":True})
+
+
+@app.route('/api/clear',methods=["DELETE"])
+def clear():
+    clear_todos()
+    return jsonify({"todos": [],"success":True})
+
 
 
 @app.route('/api/delete',methods=["DELETE"])

@@ -30,6 +30,16 @@
                 return response.json();
             }
 
+            async clearTodos(){
+                const response = await fetch(this.url.concat("clear"),{
+                    method: "DELETE",
+                    body: undefined,
+                    headers: this.headers
+                })
+
+                return response.json();
+            }
+
             async update(todo = {}){
                 const response = await fetch(this.url.concat("edit"),{
                     method: "PUT",
@@ -221,9 +231,9 @@
                 }
             });
 
-            clear.addEventListener("click", (e) => {
+            clear.addEventListener("click", async (e) => {
                 document.querySelector("ul").innerHTML = "";
-                localStorage.clear();
+                await todoActions.clearTodos()
             });
         });
     </script>

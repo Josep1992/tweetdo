@@ -72,3 +72,12 @@ def todos():
             return data
         except Exception as e:
             print("CREATING TODOS RESPONSE FROM JSON FILE exception: {}".format(e))
+
+
+def clear_todos():
+    with open(database) as file:
+        data = json.load(file)
+        data["todos"] = {}
+        with open(database, "w") as f:
+            dump(data,f)
+            return data["todos"]
