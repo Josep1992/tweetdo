@@ -15,7 +15,7 @@
     <script>
 
         class Todo{
-            url = "http://127.0.0.1:8080/api/";
+            url = "http://127.0.0.1:5000/api/";
             headers = {
                 "Content-type": "application/json; charset=utf-8"
             }
@@ -232,8 +232,8 @@
             });
 
             clear.addEventListener("click", async (e) => {
-                document.querySelector("ul").innerHTML = "";
                 await todoActions.clearTodos()
+                document.querySelector("ul").innerHTML = "";
             });
         });
     </script>

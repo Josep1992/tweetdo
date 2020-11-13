@@ -4,12 +4,14 @@ from flask.helpers import send_file
 from flask.json import jsonify
 from uuid import uuid4
 from os.path import join
+from flask_cors import CORS
 import database
 from database import create_todo,update_todo,clear_todos
 
 from constants import CONSTANTS
 
 app = Flask(__name__,static_folder='client')
+CORS(app)
 database.initialize()
 
 
@@ -71,4 +73,4 @@ def delete_todo():
 
 
 if __name__ == "__main__":
-    app.run(port=CONSTANTS['PORT'])
+    app.run(port=CONSTANTS['PORT'],host="0.0.0.0")
