@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todos</title>
 </head>
-
+<style>
+    button:active{
+        position: relative; top: 1px;
+    }
+    button{
+        border-radius: 5px;
+        border-color: #333;
+    }
+</style>
 <body>
     <h1>Todos</h1>
     <input type="text" placeholder="Enter a Todo" />
@@ -14,6 +22,20 @@
     <button id="clear">Clear all</button>
     <script>
 
+        function errorHandler(fn){
+            return function(...arguments){
+                try {
+                    function log(){console.log(...arguments)};
+                    arguments.forEach(log);
+                    const result = fn(...arguments);
+                    return result;
+                }catch(err){
+                    console.warn("Error handler",err.message);
+                    alert(err.message);
+                }
+            }
+        }
+
         class Todo{
             url = "http://127.0.0.1:5000/api/";
             headers = {
@@ -21,7 +43,8 @@
             }
 
             async add(todo = {}){
-                const response = await fetch(this.url.concat("add"),{
+                const request = errorHandler(fetch)
+                const response = await request(this.url.concat("add"),{
                     method: "POST",
                     body: JSON.stringify(todo),
                     headers: this.headers
@@ -59,7 +82,6 @@
 
                 return response.json();
             }
-
 
             async getTodos(){
                 const response = await fetch(this.url.concat("todos"),{
