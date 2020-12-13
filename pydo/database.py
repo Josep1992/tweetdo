@@ -2,9 +2,9 @@ import os
 import json
 from os.path import join
 
-from constants import CONSTANTS
+from pydo.config import Config
 
-database = join(CONSTANTS['ROOT'], 'db.json')
+database = join(Config.ROOT, 'db.json')
 
 def dump(data,file):
     json.dump(data,file,indent=2,sort_keys=True)

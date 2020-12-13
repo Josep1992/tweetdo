@@ -5,26 +5,33 @@ from flask.json import jsonify
 from uuid import uuid4
 from os.path import join
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 
-import database
-from database import create_todo,update_todo,clear_todos
+from pydo.database import create_todo,update_todo,clear_todos,initialize,todos,delete_todo
+from pydo.config import Config
 
-from constants import CONSTANTS
+
 
 app = Flask(__name__,static_folder='client')
+app.config['SQLALCHEMY_DATABASE_URI'] = Config.PYDO
 CORS(app)
-database.initialize()
+initialize()
+db = SQLAlchemy(app)
+
+from pydo.api import create_api
+
+create_api(app)
 
 
 @app.route('/', defaults={'path': ''},methods=["GET"])
 def index(path): return send_file(join(app.static_folder, 'index.html'))
 
 
-@app.route('/api/todos',methods=["GET"])
-def todos():
-    payload = database.todos()
-    response = [payload["todos"][id] for id in payload["todos"]]
-    return jsonify({"todos":response,"success":True})
+# @app.route('/api/todos',methods=["GET"])
+# def list():
+#     payload = todos()
+#     response = [payload["todos"][id] for id in payload["todos"]]
+#     return jsonify({"todos":response,"success":True})
 
 
 @app.route('/api/add',methods=["POST"])
@@ -62,16 +69,12 @@ def clear():
 
 
 @app.route('/api/delete',methods=["DELETE"])
-def delete_todo():
+def delete():
     payload = request.get_json(request.data)
 
     if payload['id'] == "":
         return jsonify({"error": "id not found","success":False})
 
-    database.delete_todo(payload["id"])
+    delete_todo(payload["id"])
 
     return jsonify({"message": 'Todo Deleted', "id": payload["id"],"success":True})
-
-
-if __name__ == "__main__":
-    app.run(port=CONSTANTS['PORT'],host="0.0.0.0")

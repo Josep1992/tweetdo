@@ -3,3 +3,4 @@ venv
 db.json
 .vscode
 __pycache__
+pydo.db
