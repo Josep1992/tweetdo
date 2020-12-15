@@ -1,9 +1,8 @@
-from flask import request
-from flask.json import jsonify
+from pydo.api.services.user import users
+from pydo.api.services.todo import todos
 
-from pydo.api.services.user import User
-from pydo.api.services.todo import Todo
+blueprints = [todos,users]
 
 def create_api(app):
-    # don't know if this is correct
-    Todo(app,request,jsonify)
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint,url_prefix="/api")

@@ -11,15 +11,14 @@ from pydo.database import create_todo,update_todo,clear_todos,initialize,todos,d
 from pydo.config import Config
 
 
-
 app = Flask(__name__,static_folder='client')
-app.config['SQLALCHEMY_DATABASE_URI'] = Config.PYDO
+app.config.from_object(Config)
+# app.config['SQLALCHEMY_DATABASE_URI'] = Config.PYDO
 CORS(app)
 initialize()
 db = SQLAlchemy(app)
 
 from pydo.api import create_api
-
 create_api(app)
 
 

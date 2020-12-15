@@ -1,16 +1,17 @@
 from datetime import date
 from uuid import uuid4
+from flask import Blueprint
 
 from pydo.database import create_todo,update_todo,clear_todos,todos,delete_todo
 from pydo import app
 
-class Todo():
-    def __init__(self,app,request,jsonify):
-        self.app = app
-        self.request = request
-        self.jsonify = jsonify
+todos = Blueprint('todos', __name__)
 
-    @app.route('/api/todos',methods=["GET"])
+class TodoService():
+    def __init__(self,*,**kwargs):
+        super().__init__(**kwargs)
+
+    @todos.route('/api/todos',methods=["GET"])
     def list(self):
         payload = todos()
         response = [payload["todos"][id] for id in payload["todos"]]

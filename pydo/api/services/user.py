@@ -1,6 +1,7 @@
-from flask.json import jsonify
+from flask import Blueprint
 from pydo.models.users import Users
 
-class User():
+users = Blueprint("users",__name__)
+class UserService():
     def __init__(self):
         pass
