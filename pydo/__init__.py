@@ -19,6 +19,7 @@ initialize()
 db = SQLAlchemy(app)
 
 from pydo.api import create_api
+
 create_api(app)
 
 
