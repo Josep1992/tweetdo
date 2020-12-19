@@ -1,7 +1,7 @@
-from pydo.api.services.user import users
-from pydo.api.services.todo import todos
+# from pydo.api.services.user import users
+from pydo.api.controllers.todo import todos
 
-blueprints = [todos,users]
+blueprints = [todos]
 PREFIX = "/api"
 
 def create_api(app):
