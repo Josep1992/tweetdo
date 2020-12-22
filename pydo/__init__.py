@@ -10,8 +10,7 @@ app.config.from_object(Config)
 CORS(app)
 initialize()
 # migrate to a @real database
-# db = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 from pydo.api import create_api
-
 create_api(app)
