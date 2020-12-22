@@ -4,7 +4,7 @@ from pydo.api.blueprints.todo import TodoBluePrint
 
 todos = TodoBluePrint('todos', __name__)
 
-@todos.route('/todos',methods=["GET"])
+@todos.route('/',methods=["GET"])
 def handle_todos():
     response = todos.service.list()
     return jsonify({"todos":response,"success":True})

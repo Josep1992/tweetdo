@@ -1,6 +1,4 @@
 from flask import Flask
-from flask.helpers import send_file
-from os.path import join
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,6 +15,3 @@ initialize()
 from pydo.api import create_api
 
 create_api(app)
-
-@app.route('/', defaults={'path': ''},methods=["GET"])
-def index(path): return send_file(join(app.static_folder, 'index.html'))

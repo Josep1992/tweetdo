@@ -37,7 +37,7 @@
         }
 
         class Todo{
-            url = "http://127.0.0.1:5000/api/";
+            url = "http://127.0.0.1:5000/api/v1/todos/";
             headers = {
                 "Content-type": "application/json; charset=utf-8"
             }
@@ -84,7 +84,7 @@
             }
 
             async getTodos(){
-                const response = await fetch(this.url.concat("todos"),{
+                const response = await fetch(this.url,{
                     method: "GET",
                     headers: this.headers
                 })
