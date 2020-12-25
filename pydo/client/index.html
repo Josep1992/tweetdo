@@ -244,7 +244,7 @@
                     const todo = createTodo({
                         UUID: response.todo.id,
                         todo: response.todo.todo,
-                        checked: response.todo.checked
+                        checked: response.todo.completed
                     })
 
                     appendTodoToList(todo);

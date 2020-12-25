@@ -1,7 +1,5 @@
-from datetime import date
-from uuid import uuid4
+import datetime
 
-from pydo.database import update_todo,clear_todos,delete_todo
 from pydo.api.services.app import AppService
 from pydo import db
 from pydo.models.todo import Todo
@@ -15,14 +13,34 @@ class TodoService(AppService):
         return  [todo.to_json() for todo in todos]
 
     def update(self,data):
-        return update_todo({**data})
+        t = Todo.query.filter_by(id=int(data["id"])).first()
+        # t["todo"] = data["todo"] have to implement changing @todo value
+        t["completed"] = data["checked"]
+        t["date_updated"] = datetime.utcnow()
+
+        db.session.commit()
+
+        updated = Todo.query.filter_by(id=t["id"]).first()
+
+        return updated.to_json()
 
     def delete_all(self):
-        clear_todos()
+        # todos = Todo.query.all()
+
+        # for t in todos:
+        #     todo = t.to_json()
+        #     print("TODO",todo)
+        #     db.session.delete(int(todo["id"]))
+        #     db.session.commit()
+
         return []
 
     def delete(self,id):
-        delete_todo(id)
+        deleted = Todo.query.filter_by(id=id).first()
+        db.session.delete(id)
+        db.session.commit()
+
+        return deleted.to_json()
 
     def create(self,data):
         todo = Todo(todo=data["todo"],completed=data["checked"])

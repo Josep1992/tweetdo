@@ -45,6 +45,6 @@ def delete():
     if payload['id'] == "":
         return jsonify({"error": "id not found","success":False})
 
-    todos.service.delete(payload['id'])
+    deleted = todos.service.delete(payload['id'])
 
-    return jsonify({"message": 'Todo Deleted', "id": payload["id"],"success":True})
+    return jsonify({"message": 'Todo Deleted', "id": payload["id"],"success":True,'todo':deleted })
