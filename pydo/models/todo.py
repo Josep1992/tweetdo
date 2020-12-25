@@ -7,3 +7,12 @@ class Todo(Base):
 
     def __repr__(self):
         return f"Todo('{self.todo}')('{self.completed}')"
+
+    def to_json(self):
+        return {
+            'todo': self.todo,
+            'completed': self.completed,
+            'id': self.id,
+            'date_created': self.date_created,
+            'date_updated': self.date_updated
+        }
