@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import datetime
 from pydo.api.services.app import AppService
 from pydo import db
 from pydo.models.todo import Todo
@@ -10,28 +9,27 @@ class TodoService(AppService):
 
     def list(self):
         todos = Todo.query.all()
-        return  [todo.to_json() for todo in todos]
+        return  [todo.to_object for todo in todos]
 
     def update(self,data):
         t = Todo.query.filter_by(id=int(data["id"])).first()
-        # t["todo"] = data["todo"] have to implement changing @todo value
-        t["completed"] = data["checked"]
-        t["date_updated"] = datetime.utcnow()
+        
+        # t.todo = data["todo"] have to implement changing @todo value
+        t.completed = data["checked"]
+        t.date_updated = datetime.utcnow()
 
         db.session.commit()
 
-        updated = Todo.query.filter_by(id=t["id"]).first()
+        updated = Todo.query.filter_by(id=t.id).first()
 
-        return updated.to_json()
+        return updated.to_object
 
     def delete_all(self):
-        # todos = Todo.query.all()
+        todos = Todo.query.all()
 
-        # for t in todos:
-        #     todo = t.to_json()
-        #     print("TODO",todo)
-        #     db.session.delete(int(todo["id"]))
-        #     db.session.commit()
+        for todo in todos:
+            db.session.delete(todo.id)
+            db.session.commit()
 
         return []
 
@@ -48,5 +46,5 @@ class TodoService(AppService):
         db.session.add(todo)
         db.session.commit()
 
-        return todo.to_json()
+        return todo.to_object
 

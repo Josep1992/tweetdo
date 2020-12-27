@@ -1,4 +1,5 @@
 from pydo import db
+from flask import jsonify
 from pydo.models.base import Base
 
 class Todo(Base):
@@ -8,7 +9,8 @@ class Todo(Base):
     def __repr__(self):
         return f"Todo('{self.todo}')('{self.completed}')"
 
-    def to_json(self):
+    @property
+    def to_object(self):
         return {
             'todo': self.todo,
             'completed': self.completed,
