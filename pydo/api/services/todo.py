@@ -28,17 +28,18 @@ class TodoService(AppService):
         todos = Todo.query.all()
 
         for todo in todos:
-            db.session.delete(todo.id)
+            db.session.delete(todo)
             db.session.commit()
 
         return []
 
     def delete(self,id):
-        deleted = Todo.query.filter_by(id=id).first()
-        db.session.delete(id)
+        todo = Todo.query.filter_by(id=id).first()
+        
+        db.session.delete(todo)
         db.session.commit()
 
-        return deleted.to_json()
+        return todo.to_object
 
     def create(self,data):
         todo = Todo(todo=data["todo"],completed=data["checked"])
