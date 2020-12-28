@@ -10,7 +10,6 @@ blueprints = [
 ]
 
 def create_api(app):
-    
     @app.route('/', defaults={'path': ''},methods=["GET"])
     def index(path): return send_file(join(app.static_folder, 'index.html'))
 
