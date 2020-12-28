@@ -14,9 +14,9 @@ def create_user():
     if not "password" in payload or payload["password"] == "":
         errors["password"] = "Password is a required field"
 
-    # user_already_exist = users.service.verify_email_already_exist(payload)
-    # if user_already_exist:
-    #     errors["user_already_exist"] = user_already_exist["message"]
+    user_already_exist = users.service.verify_email_already_exist(payload)
+    if user_already_exist:
+        errors["user_already_exist"] = user_already_exist["message"]
 
     if errors:
         return jsonify({"errors":errors,'success': False})
@@ -26,3 +26,34 @@ def create_user():
     user = users.service.create(payload)
 
     return jsonify({"user": user, "success": True})
+
+
+@users.route('/login',methods=["POST"])
+def login():
+    payload = request.get_json(request.data)
+    errors = {}
+
+    if not "email" in payload or payload["email"] == "":
+        errors["email"] = "Email is a required field"
+    if not "password" in payload or payload["password"] == "":
+        errors["password"] = "Password is a required field"
+    
+    if errors:
+        return jsonify({"errors":errors,'success': False})
+
+    user = users.service.get(payload)
+
+    if user is None:
+        errors["user_not_exist"] = "User doesn't exist"
+        return jsonify({"errors":errors,'success': False})
+
+    is_match = users.service.verify_hash(payload["password"],user["password"])
+
+    if not is_match:
+        errors["Incorrect Password"]
+        return jsonify({"errors":errors,'success': False})
+
+    token = users.service.encode_JWT({"id":user["id"],"email":user["email"]})
+    return jsonify({"token":token,'success': True})
+
+    

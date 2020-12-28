@@ -2,12 +2,21 @@ from datetime import datetime
 from pydo.api.services.app import AppService
 from pydo import db
 from pydo.models.users import Users
+from pydo.config import Config
 
 from passlib.hash import pbkdf2_sha256 as sha256
+
+import jwt
 
 class UserService(AppService):
     def __init__(self,*args,**kwargs):
         super().__init__(*args, **kwargs)
+
+    def encode_JWT(self,data):
+        return jwt.encode(data,Config.SECRET,algorithm="HS256")
+
+    def decode(self,token):
+        return jwt.decode(token,Config.SECRET,algorithm="HS256")
 
     def generate_hash(self,password):
         return sha256.hash(password)
@@ -32,6 +41,5 @@ class UserService(AppService):
         user = Users.query.filter_by(email=data["email"]).first()
         if not user:
             return None
-
 
         return user.to_object

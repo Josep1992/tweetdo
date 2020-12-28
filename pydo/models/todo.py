@@ -1,5 +1,4 @@
 from pydo import db
-from flask import jsonify
 from pydo.models.base import Base
 
 class Todo(Base):
