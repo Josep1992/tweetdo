@@ -1,4 +1,3 @@
-from datetime import datetime
 from pydo.api.services.app import AppService
 from pydo import db
 from pydo.models.users import Users
@@ -13,10 +12,10 @@ class UserService(AppService):
         super().__init__(*args, **kwargs)
 
     def encode_JWT(self,data):
-        return jwt.encode(data,Config.SECRET,algorithm="HS256")
+        return jwt.encode({**data,**Config.EXPIRATION},Config.SECRET,algorithm="HS256")
 
     def decode(self,token):
-        return jwt.decode(token,Config.SECRET,algorithm="HS256")
+        return jwt.decode(token,Config.SECRET,algorithms=["HS256"])
 
     def generate_hash(self,password):
         return sha256.hash(password)

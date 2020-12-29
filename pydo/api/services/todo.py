@@ -42,8 +42,9 @@ class TodoService(AppService):
         return todo.to_object
 
     def create(self,data):
+        print("DATA ========",data)
         todo = Todo(todo=data["todo"],completed=data["checked"])
-
+        print("TODO ========",todo)
         db.session.add(todo)
         db.session.commit()
 

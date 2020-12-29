@@ -5,7 +5,7 @@ from pydo.api.blueprints.users import UsersBlueprint
 users = UsersBlueprint('users', __name__)
 
 @users.route('/',methods=["POST"])
-def create_user():
+def sign_up():
     payload = request.get_json(request.data)
     errors = {}
 
@@ -29,7 +29,7 @@ def create_user():
 
 
 @users.route('/login',methods=["POST"])
-def login():
+def sign_in():
     payload = request.get_json(request.data)
     errors = {}
 
@@ -50,10 +50,12 @@ def login():
     is_match = users.service.verify_hash(payload["password"],user["password"])
 
     if not is_match:
-        errors["Incorrect Password"]
+        errors["invalid_password"] = "Incorrect Password"
         return jsonify({"errors":errors,'success': False})
 
     token = users.service.encode_JWT({"id":user["id"],"email":user["email"]})
-    return jsonify({"token":token,'success': True})
+    user["token"] = token
+    del user["password"]
+    return jsonify({"user":user,'success': True})
 
     
