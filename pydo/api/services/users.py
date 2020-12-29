@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydo.api.services.app import AppService
 from pydo import db
 from pydo.models.users import Users
@@ -28,7 +29,7 @@ class UserService(AppService):
         return sha256.verify(password, hash)
 
     def verify_email_already_exist(self,data):
-        user = Users.query.filter_by(email=data["email"]).first()
+        user = self.get(data)
         if(user):
             return {"message": "Email already exist"}
 
@@ -40,9 +41,23 @@ class UserService(AppService):
 
         return user.to_object
 
-    def get(self,data):
+    def update(self,data):
+        user = self.get(data,to_object=False)
+        
+        user.email = data["email"]
+        user.password = data["password"]
+        user.date_updated = datetime.utcnow()
+
+        db.session.commit()
+
+        return self.get(data).to_object
+
+    @staticmethod
+    def get(data,to_object=True):
         user = Users.query.filter_by(email=data["email"]).first()
         if not user:
             return None
 
-        return user.to_object
+        if to_object == True:
+            return user.to_object
+        return user

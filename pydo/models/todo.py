@@ -2,6 +2,8 @@ from pydo import db
 from pydo.models.base import Base
 
 class Todo(Base):
+    __tablename__ = "todos"
+    
     todo = db.Column(db.String,nullable=True)
     completed = db.Column(db.Boolean,default=False)
 

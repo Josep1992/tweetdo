@@ -20,5 +20,6 @@ def authenticate(fn):
         token = authorization.split(' ')[1]
         decoded = decode(token)
         if "id" in decoded:
+            user = UserService.get({**decoded})
             return fn(*args,**kwargs)
     return wrapper
