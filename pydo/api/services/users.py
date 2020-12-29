@@ -11,16 +11,20 @@ class UserService(AppService):
     def __init__(self,*args,**kwargs):
         super().__init__(*args, **kwargs)
 
-    def encode_JWT(self,data):
+    @staticmethod
+    def encode_JWT(data):
         return jwt.encode({**data,**Config.EXPIRATION},Config.SECRET,algorithm="HS256")
 
-    def decode(self,token):
+    @staticmethod
+    def decode(token):
         return jwt.decode(token,Config.SECRET,algorithms=["HS256"])
 
-    def generate_hash(self,password):
+    @staticmethod
+    def generate_hash(password):
         return sha256.hash(password)
 
-    def verify_hash(self,password, hash):
+    @staticmethod
+    def verify_hash(password, hash):
         return sha256.verify(password, hash)
 
     def verify_email_already_exist(self,data):

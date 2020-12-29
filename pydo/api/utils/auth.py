@@ -3,7 +3,7 @@ from functools import wraps
 from flask import request,jsonify
 from pydo.api.services.users import UserService
 
-decode = UserService().decode
+decode = UserService.decode
 
 def authenticate(fn):
     @wraps(fn)
