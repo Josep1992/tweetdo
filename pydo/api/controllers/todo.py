@@ -19,7 +19,7 @@ def create():
     payload = request.get_json(request.data)
     if payload['todo'] == '':
             return jsonify({"error": "Pydo nothing really?!","success": False})
-
+            
     response = todos.service.create(payload)
     return jsonify({"todo": response,"success":True})
 
