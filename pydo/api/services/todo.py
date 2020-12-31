@@ -8,7 +8,6 @@ class TodoService(AppService):
         super().__init__(*args, **kwargs)
 
     def list(self,user_id):
-        print("USER_ID",user_id)
         todos = Todo.query.filter_by(user_id=user_id).all()
         return  [todo.to_object for todo in todos]
 
