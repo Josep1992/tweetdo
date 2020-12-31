@@ -8,26 +8,28 @@ from pydo.api.utils.auth import authenticate
 todos = TodoBluePrint('todos', __name__)
 
 @todos.route('/',methods=["GET"])
-def handle_todos():
-    response = todos.service.list()
+@authenticate
+def handle_todos(**kwargs):
+    user_id = kwargs["user"]["id"]
+    response = todos.service.list(user_id)
     return jsonify({"todos":response,"success":True})
 
 
 @todos.route('/add',methods=["POST"])
 @authenticate
-def create():
-    payload = request.get_json(request.data)
+def create(**kwargs):
+    payload = request.get_json()
     if payload['todo'] == '':
             return jsonify({"error": "Pydo nothing really?!","success": False})
             
-    response = todos.service.create(payload)
+    response = todos.service.create({**payload,'user':{**kwargs["user"]}})
     return jsonify({"todo": response,"success":True})
 
 
 @todos.route('/edit',methods=["PUT"])
 @authenticate
-def update():
-    payload = request.get_json(request.data)
+def update(**kwargs):
+    payload = request.get_json()
 
     if payload['id'] == '':
         return jsonify({"error": "id not found","success": False})
@@ -39,15 +41,15 @@ def update():
 
 @todos.route('/clear',methods=["DELETE"])
 @authenticate
-def clear():
+def clear(**kwargs):
     response = todos.service.delete_all()
     return jsonify({"todos": response,"success":True})
 
 
 @todos.route('/delete',methods=["DELETE"])
 @authenticate
-def delete():
-    payload = request.get_json(request.data)
+def delete(**kwargs):
+    payload = request.get_json()
 
     if payload['id'] == "":
         return jsonify({"error": "id not found","success":False})

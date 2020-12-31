@@ -6,7 +6,7 @@ class Config:
     ROOT = os.path.abspath(os.path.dirname(__file__)),
     SECRET = 'MtfJMDyybMocCpyivabhDd4BTV998EJazZFtJAKRLJAvb6LZJ'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///pydo.db'
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     EXPIRATION = {
         "exp": datetime.utcnow() + timedelta(days=2)
     }

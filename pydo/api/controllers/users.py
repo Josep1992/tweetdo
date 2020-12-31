@@ -6,7 +6,7 @@ users = UsersBlueprint('users', __name__)
 
 @users.route('/',methods=["POST"])
 def sign_up():
-    payload = request.get_json(request.data)
+    payload = request.get_json()
     errors = {}
 
     if not "email" in payload or payload["email"] == "":
@@ -30,7 +30,7 @@ def sign_up():
 
 @users.route('/login',methods=["POST"])
 def sign_in():
-    payload = request.get_json(request.data)
+    payload = request.get_json()
     errors = {}
 
     if not "email" in payload or payload["email"] == "":

@@ -1,12 +1,12 @@
-from datetime import datetime
 from pydo.api.services.app import AppService
 from pydo import db
 from pydo.models.users import Users
 from pydo.config import Config
 
+from datetime import datetime
 from passlib.hash import pbkdf2_sha256 as sha256
-
 import jwt
+
 
 class UserService(AppService):
     def __init__(self,*args,**kwargs):
@@ -35,7 +35,7 @@ class UserService(AppService):
 
     def create(self,data):
         user = Users(email=data["email"],password=data["password"])
-        
+        print(user)
         db.session.add(user)
         db.session.commit()
 
@@ -54,7 +54,9 @@ class UserService(AppService):
 
     @staticmethod
     def get(data,to_object=True):
+        print("DATA",data["email"])
         user = Users.query.filter_by(email=data["email"]).first()
+        print(user)
         if not user:
             return None
 

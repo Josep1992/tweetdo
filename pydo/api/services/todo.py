@@ -7,8 +7,9 @@ class TodoService(AppService):
     def __init__(self,*args,**kwargs):
         super().__init__(*args, **kwargs)
 
-    def list(self):
-        todos = Todo.query.all()
+    def list(self,user_id):
+        print("USER_ID",user_id)
+        todos = Todo.query.filter_by(user_id=user_id).all()
         return  [todo.to_object for todo in todos]
 
     def update(self,data):
@@ -42,9 +43,7 @@ class TodoService(AppService):
         return todo.to_object
 
     def create(self,data):
-        print("DATA ========",data)
-        todo = Todo(todo=data["todo"],completed=data["checked"])
-        print("TODO ========",todo)
+        todo = Todo(todo=data["todo"],completed=data["checked"],user_id=data["user"]["id"])
         db.session.add(todo)
         db.session.commit()
 
