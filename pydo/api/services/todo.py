@@ -24,8 +24,9 @@ class TodoService(AppService):
 
         return updated.to_object
 
-    def delete_all(self):
-        todos = Todo.query.all()
+    def delete_all(self,data):
+        user_id = data["user"]["id"]
+        todos = Todo.query.filter_by(user_id=user_id).all()
 
         for todo in todos:
             db.session.delete(todo)

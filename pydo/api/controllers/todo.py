@@ -42,7 +42,8 @@ def update(**kwargs):
 @todos.route('/clear',methods=["DELETE"])
 @authenticate
 def clear(**kwargs):
-    response = todos.service.delete_all()
+    payload = request.get_json()
+    response = todos.service.delete_all({**payload,'user':{**kwargs["user"]}})
     return jsonify({"todos": response,"success":True})
 
 
