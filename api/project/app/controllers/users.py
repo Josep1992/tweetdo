@@ -1,6 +1,6 @@
 from flask.json import jsonify
 from flask import request
-from pydo.api.blueprints.users import UsersBlueprint
+from project.app.blueprints.users import UsersBlueprint
 
 users = UsersBlueprint('users', __name__)
 

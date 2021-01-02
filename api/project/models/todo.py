@@ -1,9 +1,9 @@
-from pydo import db
-from pydo.models.base import Base
-from pydo.utils import generate_id
+from project import db
+from project.models.base import Base
+
 class Todo(Base):
     __tablename__ = "todos"
-    id = db.Column(db.String, primary_key=True,default=generate_id)
+    
     todo = db.Column(db.String,nullable=True)
     completed = db.Column(db.Boolean,default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

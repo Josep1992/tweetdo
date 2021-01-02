@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from functools import wraps
 from flask import request,jsonify
-from pydo.api.services.users import UserService
+from project.app.services.users import UserService
 
 decode = UserService.decode
 

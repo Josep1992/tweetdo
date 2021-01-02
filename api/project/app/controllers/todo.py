@@ -1,9 +1,8 @@
 import json
 from flask.json import jsonify
 from flask import request
-from pydo.api.blueprints.todo import TodoBluePrint
-
-from pydo.api.utils.auth import authenticate
+from project.app.blueprints.todo import TodoBluePrint
+from project.app.utils.auth import authenticate
 
 todos = TodoBluePrint('todos', __name__)
 
