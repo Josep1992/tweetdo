@@ -1,14 +1,13 @@
-from pydo.api.services.app import AppService
-from pydo import db
-from pydo.models.users import Users
-from pydo.config import Config
+from project import db
+from project.models.users import Users
+from config import Config
 
 from datetime import datetime
 from passlib.hash import pbkdf2_sha256 as sha256
 import jwt
 
 
-class UserService(AppService):
+class UserService:
     def __init__(self,*args,**kwargs):
         super().__init__(*args, **kwargs)
 

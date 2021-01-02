@@ -1,9 +1,8 @@
 from datetime import datetime
-from pydo.api.services.app import AppService
-from pydo import db
-from pydo.models.todo import Todo
+from project import db
+from project.models.todo import Todo
 
-class TodoService(AppService):
+class TodoService():
     def __init__(self,*args,**kwargs):
         super().__init__(*args, **kwargs)
 

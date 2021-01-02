@@ -1,5 +1,5 @@
 from flask import Blueprint
-from pydo.api.services.todo import TodoService
+from project.app.services.todo import TodoService
 
 class TodoBluePrint(Blueprint):
     def __init__(self, *args, **kwargs):

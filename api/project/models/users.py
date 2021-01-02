@@ -1,9 +1,9 @@
-from pydo import db
-from pydo.models.base import Base
-from pydo.utils import generate_id
+from project import db
+from project.models.base import Base
+
 class Users(Base):
     __tablename__ = "users"
-    id = db.Column(db.String, primary_key=True,default=generate_id)
+    
     email = db.Column(db.String(100), nullable=False,unique=True)
     password = db.Column(db.String(60), nullable=False)
     todos = db.relationship('Todo',backref='todos',lazy=True)
