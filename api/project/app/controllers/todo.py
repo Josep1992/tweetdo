@@ -8,7 +8,7 @@ todos = TodoBluePrint('todos', __name__)
 
 @todos.route('/',methods=["GET"])
 @authenticate
-def handle_todos(**kwargs):
+def handle_all(**kwargs):
     user_id = kwargs["user"]["id"]
     response = todos.service.list(user_id)
     return jsonify({"todos":response,"success":True})
