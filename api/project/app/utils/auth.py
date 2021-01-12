@@ -36,7 +36,7 @@ def authenticate(fn):
                     'message': 'Internal Server Error'
                 },
             }
-            if e.__class__.__name__ == "jwt.ExpiredSignatureError": # I think im referring to the @wrong thing 🤮
+            if e.__class__.__name__ == "jwt.ExpiredSignatureError": # I think im referring to the @wrong thing
                 resp["errors"]["message"] = 'Authentication token expired'
                 status = HTTPStatus.UNAUTHORIZED
             return jsonify(resp), status
