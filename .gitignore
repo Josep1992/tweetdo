@@ -5,3 +5,4 @@ db.json
 __pycache__
 pydo.db
 *.pyc
+.DS_Store
