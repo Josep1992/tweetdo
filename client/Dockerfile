@@ -5,7 +5,7 @@ WORKDIR /client
 COPY package.json .
 RUN yarn
 
-ADD . /client
+COPY . /client
 
 EXPOSE 3000
 CMD ["yarn","dev"]
