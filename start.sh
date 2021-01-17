@@ -1,12 +1,9 @@
 #!/bin/sh
 
-cd ./api 
-docker build -t tweetodo:api .
-cd ..
-cd client 
-docker build -t tweetodo:client .
-cd ..
-cd nginx 
-docker build -t tweetodo:nginx .
+docker build -t api ./api
+docker build -t client ./client
+docker build -t nginx ./client
+
+docker compose up
 
 # docker run --rm -p 5000:5000 tweetodo:api 

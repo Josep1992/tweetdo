@@ -2,10 +2,10 @@ FROM node
 WORKDIR /client
 
 # always cache dependencies
-COPY package.json .
+COPY package.json yarn.lock ./
 RUN yarn
 
-COPY . /client
+COPY . .
 
 EXPOSE 3000
 CMD ["yarn","dev"]

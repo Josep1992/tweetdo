@@ -1,0 +1,40 @@
+services:
+  api:
+    image: api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    volumes:
+      - './api:/api'
+    ports:
+      - 5000:5000
+    # environment:
+    #   - FLASK_CONFIG=development
+    #   - FLASK_ENV=development
+    #   - APP_SETTINGS=config
+
+  nginx:
+    image: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 80:80
+    depends_on:
+      - api
+      - client
+
+  client:
+    image: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - './client:/client'
+    ports:
+      - 3000:3000
+    # environment:
+    #   - NODE_ENV=development
+    depends_on:
+      - api

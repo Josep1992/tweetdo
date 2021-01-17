@@ -8,7 +8,7 @@ export default function Home() {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>This is a Next.js App Running inside a docker container</h1>
+      <h1>This is a Next.js App Running inside a docker container with reload using docker compose</h1>
     </div>
   )
 }
